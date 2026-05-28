@@ -645,6 +645,175 @@ input.kg-search::placeholder{color:#7d8590}
   .kg-shell { grid-template-columns:1fr; }
   .kg-sidebar,.kg-detail-panel { display:none; }
 }
+
+/* ══════════════════════════════════════════
+   PRESENTATION OVERRIDE — 投影優化
+   所有字體放大、行距增加、留白加大
+══════════════════════════════════════════ */
+
+/* 全站基準 */
+body { font-size: 16px; }
+
+/* 導覽列 */
+.topbar { height: 58px; padding: 0 28px; }
+.topbar-logo { font-size: 19px; }
+.topbar-meta { font-size: 12px; }
+.topbar-badge { font-size: 11px; padding: 5px 14px; }
+.sidenav { width: 248px; }
+.nav-item { font-size: 14px; padding: 12px 12px; }
+.nav-label small { font-size: 10px; }
+.nav-status { font-size: 10px; padding: 3px 8px; }
+.sidenav-section-label { font-size: 10px; }
+.sidenav-footer { font-size: 11px; }
+
+/* 總覽頁 Hero */
+.hero-tag { font-size: 13px; margin-bottom: 36px; }
+.hero-title { font-size: clamp(56px, 7vw, 96px); }
+.hero-subtitle { font-size: 16px; margin-bottom: 44px; }
+.hero-desc { font-size: 18px; line-height: 2.0; margin-bottom: 52px; }
+.badge { font-size: 12px; padding: 8px 18px; }
+.module-name { font-size: 16px; }
+.module-pct { font-size: 14px; }
+.module-note { font-size: 13px; }
+.prog-track { height: 6px; }
+
+/* 總覽頁各節 */
+.ov-section { padding: 88px; }
+.section-label { font-size: 13px; margin-bottom: 18px; }
+.section-title { font-size: clamp(32px, 4vw, 52px); margin-bottom: 52px; }
+
+/* 骨血肌卡片 */
+.analogy-card { padding: 72px 48px; }
+.analogy-icon { font-size: 44px; margin-bottom: 24px; }
+.analogy-title { font-size: 28px; margin-bottom: 12px; }
+.analogy-en { font-size: 12px; margin-bottom: 20px; }
+.analogy-desc { font-size: 17px; line-height: 1.9; }
+.analogy-tag { font-size: 11px; padding: 6px 14px; margin-top: 20px; }
+
+/* KG 程式碼 */
+.kg-schema { font-size: 14px; line-height: 2.1; padding: 44px; }
+.kg-card-title { font-size: 18px; margin-bottom: 16px; }
+.kg-card-code { font-size: 13px; line-height: 2.0; padding: 16px; }
+
+/* 精熟等級 */
+.mastery-level { padding: 44px 32px; }
+.mastery-dot { width: 56px; height: 56px; font-size: 26px; margin-bottom: 24px; }
+.mastery-range { font-size: 28px; margin-bottom: 8px; }
+.mastery-label { font-size: 18px; margin-bottom: 12px; }
+.mastery-action { font-size: 15px; line-height: 1.8; }
+
+/* 定價卡 */
+.price-tier { font-size: 12px; margin-bottom: 16px; }
+.price-name { font-size: 24px; margin-bottom: 10px; }
+.price-amount { font-size: 44px; margin-bottom: 6px; }
+.price-unit { font-size: 14px; margin-bottom: 28px; }
+.price-features { font-size: 16px; line-height: 2.4; }
+.featured-tag { font-size: 11px; padding: 6px 14px; }
+.hw-price { font-size: 32px; margin-bottom: 10px; }
+.hw-label { font-size: 15px; }
+
+/* 比較表 */
+.compare-table { font-size: 16px; }
+.compare-table th { font-size: 12px; padding: 16px 24px; }
+.compare-table td { padding: 18px 24px; }
+.compare-table td:nth-child(2),
+.compare-table td:nth-child(3) { font-size: 15px; }
+
+/* 路線圖 */
+.phase { padding: 44px 32px; }
+.phase-num { font-size: 72px; }
+.phase-time { font-size: 12px; margin-bottom: 14px; }
+.phase-title { font-size: 20px; margin-bottom: 22px; }
+.phase-tasks { font-size: 15px; line-height: 2.4; }
+.phase-status { font-size: 11px; padding: 6px 14px; margin-top: 24px; }
+.ov-footer { padding: 48px 88px; font-size: 13px; }
+
+/* 星圖頁 */
+.map-header { height: 58px; padding: 0 28px; }
+.map-logo { font-size: 17px; }
+.student-name { font-size: 14px; }
+.student-meta { font-size: 11px; }
+.stab { font-size: 12px; padding: 6px 16px; }
+.stat-pill { font-size: 13px; }
+.stat-pill strong { font-size: 17px; }
+.fpill { font-size: 11px; padding: 6px 14px; }
+.leg-item { font-size: 12px; }
+.tt-code { font-size: 12px; }
+.tt-title { font-size: 15px; }
+.tt-score { font-size: 13px; }
+.sdp-num { font-size: 32px; }
+.sdp-lbl { font-size: 10px; }
+.ring-label { font-size: 14px; }
+.ring-sub { font-size: 10px; }
+.nd-title { font-size: 22px; }
+.nd-score-big { font-size: 56px; }
+.nd-level-name { font-size: 11px; }
+.nd-thresh { font-size: 10px; }
+.nd-sec-title { font-size: 10px; }
+.nd-desc { font-size: 14px; line-height: 1.9; }
+.nchip { font-size: 11px; padding: 4px 10px; }
+.ai-insight-label { font-size: 10px; }
+.ai-insight-text { font-size: 14px; line-height: 1.9; }
+
+/* 精熟演算法頁 */
+.ma-eyebrow { font-size: 11px; }
+.ma-heading { font-size: clamp(24px, 3vw, 38px); }
+.node-sel-row label { font-size: 12px; }
+select.node-picker { font-size: 16px; }
+.score-big { font-size: 88px; }
+.score-unit { font-size: 30px; }
+.score-level-badge { font-size: 11px; padding: 5px 14px; }
+.score-node-id { font-size: 13px; }
+.score-node-title { font-size: 19px; }
+.score-stage { font-size: 13px; }
+.tick { font-size: 11px; }
+.action-diff { font-size: 11px; }
+.action-icon { font-size: 24px; }
+.action-label { font-size: 12px; }
+.action-delta { font-size: 22px; }
+.action-btn { padding: 22px 16px; }
+.decay-lbl { font-size: 11px; }
+.decay-val { font-size: 22px; }
+.decay-preview-txt { font-size: 11px; }
+.log-title { font-size: 10px; }
+.log-entry { font-size: 12px; padding: 9px 12px; }
+.btn-reset { font-size: 12px; padding: 11px 22px; }
+.formula-eyebrow { font-size: 10px; }
+.formula-heading { font-size: 22px; }
+.formula-block { font-size: 13px; line-height: 2.1; }
+.ftable { font-size: 13px; }
+.ftable th { font-size: 10px; padding: 9px 12px; }
+.ftable td { padding: 11px 12px; line-height: 1.6; }
+.lc-range { font-size: 24px; }
+.lc-name { font-size: 11px; }
+.lc-action { font-size: 13px; line-height: 1.7; }
+.zpd-note { font-size: 13px; line-height: 1.9; }
+
+/* 知識圖譜頁 */
+.kg-sidebar-title { font-size: 10px; }
+.kg-stage-label { font-size: 13px; padding: 7px 10px; }
+.kg-stage-count { font-size: 11px; }
+.kg-node-name { font-size: 13px; }
+.kg-node-code { font-size: 10px; padding: 3px 7px; }
+.kg-filter-lbl { font-size: 13px; }
+select.kg-select { font-size: 12px; padding: 6px 12px; }
+input.kg-search { font-size: 13px; padding: 6px 14px; width: 200px; }
+.kg-row-count { font-size: 11px; }
+.kg-table { font-size: 14px; }
+.kg-table thead th { font-size: 10px; padding: 11px 14px; }
+.kg-table tbody td { padding: 11px 14px; line-height: 1.6; }
+.code-badge { font-size: 11px; padding: 3px 9px; }
+.cat-badge { font-size: 10px; padding: 3px 8px; }
+.stage-badge { font-size: 13px; }
+.desc-cell { font-size: 13px; line-height: 1.7; }
+.prereq-chip { font-size: 10px; padding: 3px 7px; }
+.diff-badge { font-size: 13px; }
+.kdp-code { font-size: 24px; margin-bottom: 8px; }
+.kdp-title { font-size: 18px; margin-bottom: 16px; }
+.kdp-sec-title { font-size: 10px; }
+.kdp-desc { font-size: 14px; line-height: 1.8; }
+.kdp-chip { font-size: 11px; padding: 4px 11px; }
+.kdp-code-block { font-size: 12px; line-height: 2.0; }
 </style>
 </head>
 <body>
