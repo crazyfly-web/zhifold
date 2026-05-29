@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>智學摺疊 · 學生版介面設計</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+TC:wght@400;500;700;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sky: #e8f4fd;
+  --sun: #FFB830;
+  --leaf: #4CAF82;
+  --leaf-dark: #2d8a5e;
+  --sky-blue: #5BBFEF;
+  --coral: #FF6B6B;
+  --lavender: #A78BFA;
+  --peach: #FFB4A2;
+  --cream: #FFFBF0;
+  --ink: #2D3142;
+  --ink-soft: #4A4E69;
+  --card-white: #FFFFFF;
+  --shadow-warm: rgba(255,184,48,0.2);
+  --shadow-soft: rgba(45,49,66,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Noto Sans TC', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ── decorative blobs ── */
+.blob-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
+}
+
+/* ── TOP NAV ── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,251,240,0.88);
+  backdrop-filter: blur(16px);
+  border-bottom: 2px solid rgba(255,184,48,0.25);
+  padding: 0 40px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-logo {
+  font-family: 'Fredoka One', cursive;
+  font-size: 24px;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+.nav-logo span { color: var(--leaf); }
+.nav-logo em { color: var(--sun); font-style: normal; }
+
+.nav-tabs {
+  display: flex;
+  gap: 6px;
+  margin-left: 24px;
+}
+.nav-tab {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 18px;
+  border-radius: 100px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .2s;
+  color: var(--ink-soft);
+  background: transparent;
+}
+.nav-tab:hover { background: rgba(76,175,130,0.1); color: var(--leaf-dark); }
+.nav-tab.active { background: var(--leaf); color: #fff; border-color: var(--leaf-dark); }
+
+.nav-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.nav-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 100px;
+  background: rgba(255,184,48,0.15);
+  color: #b37d00;
+  border: 1px solid rgba(255,184,48,0.4);
+}
+
+/* ── CONTENT SECTIONS ── */
+.section {
+  display: none;
+  position: relative;
+  z-index: 1;
+  animation: fadeUp .4s ease forwards;
+}
+.section.active { display: block; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════
+   SECTION 1: ONBOARDING / DAY 0
+════════════════════════════════ */
+.onboard-hero {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.onboard-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(91,191,239,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 20% 100%, rgba(76,175,130,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(255,184,48,0.12) 0%, transparent 60%);
+}
+
+/* floating elements */
+.float-star {
+  position: absolute;
+  font-size: 28px;
+  animation: floatStar 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes floatStar {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-16px) rotate(10deg); }
+}
+
+.onboard-inner { position: relative; max-width: 640px; margin: 0 auto; }
+
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+.step-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: rgba(45,49,66,0.15);
+  transition: all .3s;
+}
+.step-dot.active { background: var(--leaf); width: 32px; border-radius: 6px; }
+.step-dot.done { background: var(--sun); }
+
+.onboard-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: clamp(36px, 5vw, 60px);
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+.onboard-title em { color: var(--leaf); font-style: normal; }
+.onboard-title span { color: var(--sun); }
+
+.onboard-sub {
+  font-size: 18px;
+  color: var(--ink-soft);
+  line-height: 1.8;
+  margin-bottom: 44px;
+}
+
+/* Creature selection */
+.creature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 40px;
+}
+.creature-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px 16px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 4px 16px var(--shadow-soft);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.creature-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.creature-card:hover { transform: translateY(-6px) scale(1.04); }
+.creature-card.selected {
+  border-color: var(--leaf);
+  box-shadow: 0 8px 28px rgba(76,175,130,0.35);
+  transform: translateY(-8px) scale(1.06);
+}
+.creature-card.selected::before { opacity: 1; }
+
+.creature-card[data-type="dragon"]  { --cc: #5BBFEF; }
+.creature-card[data-type="phoenix"] { --cc: #FF6B6B; }
+.creature-card[data-type="qilin"]   { --cc: #FFB830; }
+.creature-card[data-type="turtle"]  { --cc: #4CAF82; }
+
+.creature-card.selected { border-color: var(--cc); box-shadow: 0 8px 28px rgba(0,0,0,.12); }
+
+.creature-emoji { font-size: 52px; margin-bottom: 10px; display: block;
+  animation: bobble 3s ease-in-out infinite; }
+@keyframes bobble {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.creature-name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.creature-trait {
+  font-size: 12px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+.creature-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--cc);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  color: #fff;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.creature-card.selected .creature-badge { opacity: 1; }
+
+.name-input-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.name-input {
+  flex: 1;
+  padding: 16px 22px;
+  border-radius: 100px;
+  border: 2px solid rgba(45,49,66,0.15);
+  font-family: 'Noto Sans TC', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  background: #fff;
+  outline: none;
+  transition: border-color .2s;
+}
+.name-input:focus { border-color: var(--leaf); }
+.name-input::placeholder { color: rgba(45,49,66,0.3); font-weight: 400; }
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 18px 44px;
+  border-radius: 100px;
+  background: var(--leaf);
+  color: #fff;
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 6px 20px rgba(76,175,130,0.4);
+  text-decoration: none;
+}
+.btn-primary:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 10px 30px rgba(76,175,130,0.5); }
+.btn-primary:active { transform: scale(.97); }
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  border-radius: 100px;
+  background: transparent;
+  color: var(--ink-soft);
+  font-size: 15px;
+  font-weight: 700;
+  border: 2px solid rgba(45,49,66,0.2);
+  cursor: pointer;
+  transition: all .2s;
+}
+.btn-secondary:hover { border-color: var(--leaf); color: var(--leaf-dark); background: rgba(76,175,130,0.06); }
+
+/* ════════════════════════════════
+   SECTION 2: DAILY HOME SCREEN
+════════════════════════════════ */
+.home-layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: calc(100vh - 64px);
+}
+
+/* Left panel: Creature */
+.creature-panel {
+  background: linear-gradient(160deg, #e8f8f0 0%, #d4f2e4 100%);
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-right: 2px solid rgba(76,175,130,0.15);
+  position: sticky;
+  top: 64px;
+  height: calc(100vh - 64px);
+  overflow: hidden;
+}
+
+.creature-panel::before {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: -40px;
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, rgba(76,175,130,0.2), transparent 70%);
+  border-radius: 50%;
+}
+
+.creature-name-display {
+  font-family: 'Fredoka One', cursive;
+  font-size: 22px;
+  color: var(--leaf-dark);
+  margin-bottom: 4px;
+}
+.creature-level {
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(45,49,66,0.4);
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+}
+
+.creature-display {
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 96px;
+  position: relative;
+  animation: creatureFloat 4s ease-in-out infinite;
+  margin-bottom: 8px;
+}
+@keyframes creatureFloat {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+.creature-glow {
+  position: absolute;
+  inset: -20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(76,175,130,0.3), transparent 70%);
+  animation: glowPulse 3s ease-in-out infinite;
+}
+@keyframes glowPulse {
+  0%,100% { opacity: .5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.creature-mood {
+  font-size: 13px;
+  color: var(--leaf-dark);
+  font-weight: 700;
+  margin-bottom: 20px;
+  background: rgba(76,175,130,0.15);
+  padding: 6px 16px;
+  border-radius: 100px;
+}
+
+/* Stats bars */
+.stat-bars { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.stat-row { display: flex; flex-direction: column; gap: 5px; }
+.stat-label-row { display: flex; justify-content: space-between; align-items: center; }
+.stat-label { font-size: 12px; font-weight: 700; color: var(--ink-soft); }
+.stat-val { font-size: 12px; font-weight: 900; color: var(--ink); font-family: 'Fredoka One', cursive; }
+.stat-track {
+  height: 8px;
+  background: rgba(45,49,66,0.1);
+  border-radius: 100px;
+  overflow: hidden;
+}
+.stat-fill {
+  height: 100%;
+  border-radius: 100px;
+  transition: width 1s cubic-bezier(.16,1,.3,1);
+}
+
+/* Streak badge */
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #FFB830, #FF8C00);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 16px;
+  font-weight: 900;
+  font-size: 14px;
+  box-shadow: 0 4px 14px rgba(255,184,48,0.4);
+  width: 100%;
+  justify-content: center;
+}
+.streak-badge .fire { font-size: 20px; }
+
+/* Right: Main content */
+.home-main { padding: 36px 40px; overflow-y: auto; }
+
+.home-greeting {
+  margin-bottom: 32px;
+}
+.home-greeting h1 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 36px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.home-greeting h1 em { color: var(--leaf); font-style: normal; }
+.home-greeting p { font-size: 16px; color: var(--ink-soft); line-height: 1.7; }
+
+/* Today's 3 tasks */
+.today-card {
+  background: linear-gradient(135deg, #fff9e6, #fff3cc);
+  border: 2px solid rgba(255,184,48,0.3);
+  border-radius: 24px;
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  position: relative;
+  overflow: hidden;
+}
+.today-card::after {
+  content: '☀️';
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 56px;
+  opacity: .15;
+}
+.today-label {
+  font-family: 'Fredoka One', cursive;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: #b37d00;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.today-tasks { display: flex; flex-direction: column; gap: 12px; }
+.today-task {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255,255,255,0.7);
+  padding: 14px 18px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all .2s;
+  border: 2px solid transparent;
+}
+.today-task:hover { background: #fff; border-color: rgba(255,184,48,0.4); transform: translateX(4px); }
+.today-task.done { opacity: .6; }
+.task-check {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(45,49,66,0.2);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 14px;
+  transition: all .2s;
+}
+.today-task.done .task-check { background: var(--leaf); border-color: var(--leaf); color: #fff; }
+.task-text { flex: 1; font-size: 15px; font-weight: 700; color: var(--ink); }
+.task-xp { font-family: 'Fredoka One', cursive; font-size: 14px; color: var(--sun); }
+
+/* Cards grid */
+.cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.mini-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 4px 16px var(--shadow-soft);
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  cursor: pointer;
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+.mini-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px var(--shadow-soft); border-color: var(--cc,rgba(76,175,130,0.3)); }
+
+.mini-card[data-color="green"] { --cc: rgba(76,175,130,0.3); }
+.mini-card[data-color="blue"] { --cc: rgba(91,191,239,0.3); }
+.mini-card[data-color="coral"] { --cc: rgba(255,107,107,0.3); }
+.mini-card[data-color="purple"] { --cc: rgba(167,139,250,0.3); }
+.mini-card[data-color="sun"] { --cc: rgba(255,184,48,0.3); }
+
+.mini-card-icon { font-size: 36px; margin-bottom: 10px; }
+.mini-card-title { font-family: 'Fredoka One', cursive; font-size: 17px; color: var(--ink); margin-bottom: 5px; }
+.mini-card-sub { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.mini-card-badge {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: var(--leaf);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  padding: 3px 9px;
+  border-radius: 100px;
+}
+
+/* Subject map */
+.subject-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.subject-card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 16px;
+  text-align: center;
+  box-shadow: 0 4px 16px var(--shadow-soft);
+  cursor: pointer;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  border: 2px solid transparent;
+}
+.subject-card:hover { transform: translateY(-4px); }
+.subject-card[data-s="math"]    { --sc: #5BBFEF; }
+.subject-card[data-s="chinese"] { --sc: #FF6B6B; }
+.subject-card[data-s="english"] { --sc: #A78BFA; }
+.subject-card[data-s="science"] { --sc: #4CAF82; }
+.subject-card:hover { border-color: var(--sc); }
+
+.subject-icon { font-size: 32px; margin-bottom: 8px; }
+.subject-name { font-family: 'Fredoka One', cursive; font-size: 15px; color: var(--ink); margin-bottom: 8px; }
+.subject-ring {
+  width: 52px; height: 52px;
+  margin: 0 auto 8px;
+  position: relative;
+}
+.subject-ring svg { transform: rotate(-90deg); }
+.subject-ring-track { fill:none; stroke:rgba(45,49,66,.1); stroke-width:5; }
+.subject-ring-prog { fill:none; stroke-width:5; stroke-linecap:round; transition:stroke-dashoffset 1s cubic-bezier(.16,1,.3,1); }
+.subject-pct { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-family:'Fredoka One',cursive; font-size:14px; color:var(--ink); }
+.subject-status { font-size:11px; font-weight:700; color:rgba(45,49,66,.5); }
+
+/* ════════════════════════════════
+   SECTION 3: LEARNING MAP
+════════════════════════════════ */
+.map-section {
+  padding: 40px;
+  min-height: calc(100vh - 64px);
+}
+.map-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+.map-header-row h2 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 32px;
+  color: var(--ink);
+}
+.filter-pills-map {
+  display: flex;
+  gap: 8px;
+}
+.pill {
+  padding: 8px 18px;
+  border-radius: 100px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid rgba(45,49,66,0.12);
+  color: var(--ink-soft);
+  transition: all .2s;
+  background: #fff;
+}
+.pill:hover { border-color: var(--leaf); color: var(--leaf-dark); }
+.pill.active { background: var(--leaf); color: #fff; border-color: var(--leaf-dark); }
+
+/* Path visualization */
+.learning-path {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 24px;
+  position: relative;
+  padding: 20px 0;
+}
+
+.path-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stage-header {
+  text-align: center;
+  padding: 10px;
+  border-radius: 14px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.path-node {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  text-align: center;
+  cursor: pointer;
+  transition: all .25s cubic-bezier(.34,1.56,.64,1);
+  box-shadow: 0 4px 14px var(--shadow-soft);
+  border: 3px solid transparent;
+  position: relative;
+}
+.path-node:hover { transform: scale(1.06); }
+
+.path-node.locked {
+  background: #f5f5f5;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: .6;
+}
+.path-node.developing {
+  border-color: #FFB830;
+  box-shadow: 0 4px 14px rgba(255,184,48,0.3);
+}
+.path-node.mastered {
+  border-color: #4CAF82;
+  box-shadow: 0 4px 14px rgba(76,175,130,0.3);
+}
+.path-node.expert {
+  border-color: #5BBFEF;
+  box-shadow: 0 6px 20px rgba(91,191,239,0.4);
+  background: linear-gradient(135deg, #f0faff, #fff);
+}
+
+.node-emoji { font-size: 28px; margin-bottom: 6px; display: block; }
+.node-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
+.node-bar { height: 5px; background: rgba(45,49,66,.1); border-radius: 100px; overflow: hidden; }
+.node-bar-fill { height: 100%; border-radius: 100px; }
+
+.node-status-icon {
+  position: absolute;
+  top: -8px; right: -8px;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+}
+
+/* ════════════════════════════════
+   SECTION 4: SQUAD / SOCIAL
+════════════════════════════════ */
+.squad-section {
+  padding: 40px;
+  min-height: calc(100vh - 64px);
+}
+.squad-header {
+  margin-bottom: 32px;
+}
+.squad-header h2 {
+  font-family: 'Fredoka One', cursive;
+  font-size: 32px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.squad-header p { font-size: 16px; color: var(--ink-soft); }
+
+.squad-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+}
+
+/* Squad card */
+.squad-card {
+  background: linear-gradient(160deg, #f0faff, #e8f5ff);
+  border: 2px solid rgba(91,191,239,0.3);
+  border-radius: 24px;
+  padding: 28px;
+}
+.squad-card-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  color: var(--sky-blue);
+  margin-bottom: 4px;
+}
+.squad-week-goal {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  margin-bottom: 20px;
+}
+
+.squad-progress-bar {
+  height: 14px;
+  background: rgba(91,191,239,0.2);
+  border-radius: 100px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+.squad-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #5BBFEF, #38B2E0);
+  border-radius: 100px;
+  position: relative;
+}
+.squad-progress-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0),rgba(255,255,255,0.3),rgba(255,255,255,0));
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+.squad-progress-label {
+  font-family: 'Fredoka One', cursive;
+  font-size: 13px;
+  color: var(--sky-blue);
+  margin-bottom: 24px;
+}
+
+/* Members */
+.squad-members { display: flex; flex-direction: column; gap: 12px; }
+.member-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255,255,255,0.7);
+  padding: 12px 16px;
+  border-radius: 14px;
+}
+.member-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.member-info { flex: 1; }
+.member-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.member-progress { font-size: 12px; color: var(--ink-soft); }
+.member-contrib {
+  font-family: 'Fredoka One', cursive;
+  font-size: 16px;
+  color: var(--leaf);
+}
+
+/* Activity feed */
+.activity-feed {
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 4px 20px var(--shadow-soft);
+}
+.feed-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.feed-items { display: flex; flex-direction: column; gap: 14px; }
+.feed-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: var(--cream);
+  transition: background .2s;
+}
+.feed-item:hover { background: #f0faf5; }
+.feed-avatar { width: 36px; height: 36px; border-radius: 50%; font-size: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.feed-content { flex: 1; }
+.feed-text { font-size: 14px; color: var(--ink); line-height: 1.5; margin-bottom: 3px; }
+.feed-text strong { color: var(--leaf-dark); }
+.feed-time { font-size: 11px; color: rgba(45,49,66,.4); }
+.feed-reaction {
+  font-size: 20px;
+  cursor: pointer;
+  transition: transform .2s;
+  flex-shrink: 0;
+}
+.feed-reaction:hover { transform: scale(1.3); }
+
+/* Challenge card */
+.challenge-card {
+  background: linear-gradient(135deg, #fff0f5, #ffe4ec);
+  border: 2px solid rgba(255,107,107,0.25);
+  border-radius: 20px;
+  padding: 22px;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.challenge-icon { font-size: 44px; flex-shrink: 0; }
+.challenge-info { flex: 1; }
+.challenge-title { font-family: 'Fredoka One', cursive; font-size: 17px; color: var(--coral); margin-bottom: 4px; }
+.challenge-desc { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+.challenge-btn {
+  padding: 10px 22px;
+  background: var(--coral);
+  color: #fff;
+  border-radius: 100px;
+  font-family: 'Fredoka One', cursive;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.challenge-btn:hover { transform: scale(1.05); background: #ff5252; }
+
+/* ════════════════════════════════
+   SECTION 5: CREATURE PROFILE
+════════════════════════════════ */
+.profile-section {
+  padding: 40px;
+  min-height: calc(100vh - 64px);
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.profile-creature-card {
+  background: linear-gradient(160deg, #e8f8f0, #d0f0e0);
+  border-radius: 28px;
+  padding: 36px 28px;
+  text-align: center;
+  border: 2px solid rgba(76,175,130,0.2);
+  position: sticky;
+  top: 84px;
+}
+
+.creature-big {
+  font-size: 120px;
+  display: block;
+  margin-bottom: 8px;
+  animation: creatureFloat 4s ease-in-out infinite;
+}
+
+.profile-name {
+  font-family: 'Fredoka One', cursive;
+  font-size: 28px;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.profile-lv {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--leaf-dark);
+  margin-bottom: 20px;
+}
+
+.trait-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.trait-chip {
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+}
+.trait-icon { font-size: 20px; margin-bottom: 4px; }
+.trait-name { font-size: 11px; font-weight: 700; color: var(--ink-soft); }
+.trait-val { font-family: 'Fredoka One', cursive; font-size: 14px; color: var(--ink); }
+
+.evolve-hint {
+  background: rgba(255,184,48,0.15);
+  border: 1px dashed rgba(255,184,48,0.6);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #b37d00;
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+/* Right: achievements & history */
+.profile-right {}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.achievement {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 14px;
+  text-align: center;
+  box-shadow: 0 4px 16px var(--shadow-soft);
+  transition: all .2s;
+}
+.achievement:hover { transform: translateY(-3px); }
+.achievement.locked { opacity: .4; filter: grayscale(1); }
+.achievement-icon { font-size: 36px; margin-bottom: 8px; }
+.achievement-name { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+.achievement-desc { font-size: 10px; color: var(--ink-soft); }
+
+.monthly-story {
+  background: linear-gradient(135deg, #fff9e6, #fff3cc);
+  border: 2px solid rgba(255,184,48,0.25);
+  border-radius: 24px;
+  padding: 28px 32px;
+}
+.story-title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 20px;
+  color: #b37d00;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.story-text {
+  font-size: 15px;
+  color: var(--ink);
+  line-height: 2.0;
+}
+.story-text strong { color: var(--leaf-dark); }
+.story-text em { color: var(--sun); font-style: normal; font-weight: 700; }
+
+/* ════════════════════════════════
+   SCROLLBAR
+════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(76,175,130,0.3); border-radius: 3px; }
+
+/* responsive */
+@media (max-width: 900px) {
+  .home-layout { grid-template-columns: 1fr; }
+  .creature-panel { position: static; height: auto; }
+  .squad-grid { grid-template-columns: 1fr; }
+  .profile-section { grid-template-columns: 1fr; }
+  .profile-creature-card { position: static; }
+  .learning-path { grid-template-columns: 1fr 1fr; }
+  .cards-row { grid-template-columns: 1fr 1fr; }
+  .subject-row { grid-template-columns: 1fr 1fr; }
+  .achievements-grid { grid-template-columns: repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- Background blobs -->
+<div class="blob-bg">
+  <div class="blob" style="width:500px;height:500px;background:#b8edd0;top:-100px;left:-100px"></div>
+  <div class="blob" style="width:400px;height:400px;background:#bde4f7;top:30%;right:-80px"></div>
+  <div class="blob" style="width:350px;height:350px;background:#fff0c8;bottom:0;left:30%"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">🐉 智學<span>摺</span><em>疊</em></a>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showSection('home',this)">🏠 首頁</div>
+    <div class="nav-tab" onclick="showSection('map',this)">🗺️ 學習地圖</div>
+    <div class="nav-tab" onclick="showSection('squad',this)">👯 學習小隊</div>
+    <div class="nav-tab" onclick="showSection('profile',this)">🐉 我的學靈</div>
+    <div class="nav-tab" onclick="showSection('onboard',this)">✨ 開始體驗</div>
+  </div>
+  <div class="nav-right">
+    <div class="nav-badge">🔥 連續 12 天</div>
+    <div class="nav-badge" style="background:rgba(76,175,130,0.12);color:var(--leaf-dark);border-color:rgba(76,175,130,0.3)">⭐ 1,240 XP</div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════
+     SECTION: ONBOARDING
+══════════════════════════ -->
+<section class="section" id="sec-onboard">
+  <div class="onboard-hero">
+    <!-- floating decorations -->
+    <div class="float-star" style="top:12%;left:8%;animation-delay:.5s">⭐</div>
+    <div class="float-star" style="top:20%;right:10%;animation-delay:1s;font-size:20px">✨</div>
+    <div class="float-star" style="bottom:25%;left:12%;animation-delay:1.5s;font-size:22px">🌟</div>
+    <div class="float-star" style="bottom:20%;right:8%;animation-delay:.8s;font-size:18px">💫</div>
+    <div class="float-star" style="top:50%;left:4%;animation-delay:2s;font-size:24px">🌱</div>
+
+    <div class="onboard-inner">
+      <div class="step-indicator">
+        <div class="step-dot done"></div>
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+      </div>
+
+      <div class="onboard-title">選擇你的<br><em>學習夥伴</em> <span>🥚</span></div>
+      <div class="onboard-sub">牠會陪著你一起成長！<br>你學得越多，牠就越強大、越美麗。</div>
+
+      <div class="creature-grid">
+        <div class="creature-card" data-type="dragon" onclick="selectCreature(this)">
+          <div class="creature-badge">✓</div>
+          <span class="creature-emoji" style="animation-delay:0s">🐲</span>
+          <div class="creature-name">青龍</div>
+          <div class="creature-trait">好奇心強<br>特別喜歡數學</div>
+        </div>
+        <div class="creature-card selected" data-type="phoenix" onclick="selectCreature(this)">
+          <div class="creature-badge">✓</div>
+          <span class="creature-emoji" style="animation-delay:.5s">🦅</span>
+          <div class="creature-name">火鳳凰</div>
+          <div class="creature-trait">充滿熱情<br>語文能力超強</div>
+        </div>
+        <div class="creature-card" data-type="qilin" onclick="selectCreature(this)">
+          <div class="creature-badge">✓</div>
+          <span class="creature-emoji" style="animation-delay:1s">🦄</span>
+          <div class="creature-name">麒麟</div>
+          <div class="creature-trait">溫和善良<br>超強記憶力</div>
+        </div>
+        <div class="creature-card" data-type="turtle" onclick="selectCreature(this)">
+          <div class="creature-badge">✓</div>
+          <span class="creature-emoji" style="animation-delay:1.5s">🐢</span>
+          <div class="creature-name">玄武</div>
+          <div class="creature-trait">穩定踏實<br>科學小達人</div>
+        </div>
+      </div>
+
+      <div class="name-input-row">
+        <input class="name-input" type="text" placeholder="幫牠取個名字吧！" value="小翔" maxlength="6">
+        <button class="btn-secondary">🎲 隨機</button>
+      </div>
+
+      <button class="btn-primary" onclick="showSection('home', document.querySelector('.nav-tab'))">
+        讓冒險開始！ 🚀
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     SECTION: HOME
+══════════════════════════ -->
+<section class="section active" id="sec-home">
+  <div class="home-layout">
+
+    <!-- Creature sidebar -->
+    <div class="creature-panel">
+      <div class="creature-name-display">小翔</div>
+      <div class="creature-level">LV.7 · 少年鳳凰</div>
+
+      <div class="creature-display">
+        <div class="creature-glow"></div>
+        🦅
+      </div>
+
+      <div class="creature-mood">💬 「我今天好想學英語！」</div>
+
+      <div class="stat-bars">
+        <div class="stat-row">
+          <div class="stat-label-row">
+            <span class="stat-label">📚 知識力</span>
+            <span class="stat-val">74</span>
+          </div>
+          <div class="stat-track">
+            <div class="stat-fill" style="width:74%;background:linear-gradient(90deg,#5BBFEF,#38B2E0)"></div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row">
+            <span class="stat-label">⚡ 專注力</span>
+            <span class="stat-val">62</span>
+          </div>
+          <div class="stat-track">
+            <div class="stat-fill" style="width:62%;background:linear-gradient(90deg,#FFB830,#FF8C00)"></div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row">
+            <span class="stat-label">🤝 友情力</span>
+            <span class="stat-val">88</span>
+          </div>
+          <div class="stat-track">
+            <div class="stat-fill" style="width:88%;background:linear-gradient(90deg,#FF6B6B,#FF4040)"></div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-label-row">
+            <span class="stat-label">📖 閱讀力</span>
+            <span class="stat-val">55</span>
+          </div>
+          <div class="stat-track">
+            <div class="stat-fill" style="width:55%;background:linear-gradient(90deg,#A78BFA,#7C3AED)"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="streak-badge">
+        <span class="fire">🔥</span>
+        連續學習 12 天！
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="home-main">
+      <div class="home-greeting">
+        <h1>早安，<em>林小明</em>！👋</h1>
+        <p>小翔今天很有精神，牠說想學除法！<br>今天完成 3 件事就能讓牠長出新羽毛 ✨</p>
+      </div>
+
+      <!-- Today's tasks -->
+      <div class="today-card">
+        <div class="today-label">☀️ 今日三件事（約 5 分鐘）</div>
+        <div class="today-tasks">
+          <div class="today-task done" onclick="toggleTask(this)">
+            <div class="task-check">✓</div>
+            <div class="task-text">複習昨天學的「除法互逆」</div>
+            <div class="task-xp">+15 XP</div>
+          </div>
+          <div class="today-task" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-text">挑戰今日新題：分數加減（3 題）</div>
+            <div class="task-xp">+30 XP</div>
+          </div>
+          <div class="today-task" onclick="toggleTask(this)">
+            <div class="task-check"></div>
+            <div class="task-text">看看隊友小雅的今日進度 💬</div>
+            <div class="task-xp">+5 XP</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick access cards -->
+      <div class="cards-row">
+        <div class="mini-card" data-color="green" onclick="showSection('map', document.querySelectorAll('.nav-tab')[1])">
+          <div class="mini-card-badge">繼續</div>
+          <div class="mini-card-icon">🗺️</div>
+          <div class="mini-card-title">學習地圖</div>
+          <div class="mini-card-sub">除法計算<br>精熟度 55%</div>
+        </div>
+        <div class="mini-card" data-color="blue">
+          <div class="mini-card-badge">新</div>
+          <div class="mini-card-icon">📚</div>
+          <div class="mini-card-title">今日閱讀</div>
+          <div class="mini-card-sub">《小王子》第三章<br>對應 3 個指標</div>
+        </div>
+        <div class="mini-card" data-color="sun">
+          <div class="mini-card-icon">✏️</div>
+          <div class="mini-card-title">AI 批改作業</div>
+          <div class="mini-card-sub">生字本待批改<br>5 個字等你寫</div>
+        </div>
+        <div class="mini-card" data-color="coral" onclick="showSection('squad', document.querySelectorAll('.nav-tab')[2])">
+          <div class="mini-card-badge">2則</div>
+          <div class="mini-card-icon">👯</div>
+          <div class="mini-card-title">學習小隊</div>
+          <div class="mini-card-sub">隊友有新動態<br>快去看看！</div>
+        </div>
+        <div class="mini-card" data-color="purple">
+          <div class="mini-card-icon">🎯</div>
+          <div class="mini-card-title">本週挑戰</div>
+          <div class="mini-card-sub">完成 5 個節點<br>進度 3/5</div>
+        </div>
+        <div class="mini-card" data-color="green" onclick="showSection('profile', document.querySelectorAll('.nav-tab')[3])">
+          <div class="mini-card-icon">🐉</div>
+          <div class="mini-card-title">學靈成長</div>
+          <div class="mini-card-sub">再 260 XP<br>進化新形態！</div>
+        </div>
+      </div>
+
+      <!-- Subject progress -->
+      <div style="font-family:'Fredoka One',cursive;font-size:20px;color:var(--ink);margin-bottom:16px">📊 各科進度</div>
+      <div class="subject-row">
+        <div class="subject-card" data-s="math">
+          <div class="subject-icon">🔢</div>
+          <div class="subject-name">數學</div>
+          <div class="subject-ring">
+            <svg width="52" height="52" viewBox="0 0 52 52">
+              <circle class="subject-ring-track" cx="26" cy="26" r="21"/>
+              <circle class="subject-ring-prog" cx="26" cy="26" r="21"
+                stroke="#5BBFEF" stroke-dasharray="131.9" stroke-dashoffset="59.4"/>
+            </svg>
+            <div class="subject-pct">55%</div>
+          </div>
+          <div class="subject-status">符合年齡</div>
+        </div>
+        <div class="subject-card" data-s="chinese">
+          <div class="subject-icon">📖</div>
+          <div class="subject-name">國語</div>
+          <div class="subject-ring">
+            <svg width="52" height="52" viewBox="0 0 52 52">
+              <circle class="subject-ring-track" cx="26" cy="26" r="21"/>
+              <circle class="subject-ring-prog" cx="26" cy="26" r="21"
+                stroke="#FF6B6B" stroke-dasharray="131.9" stroke-dashoffset="72.5"/>
+            </svg>
+            <div class="subject-pct">45%</div>
+          </div>
+          <div class="subject-status">加油中 💪</div>
+        </div>
+        <div class="subject-card" data-s="english">
+          <div class="subject-icon">🔤</div>
+          <div class="subject-name">英語</div>
+          <div class="subject-ring">
+            <svg width="52" height="52" viewBox="0 0 52 52">
+              <circle class="subject-ring-track" cx="26" cy="26" r="21"/>
+              <circle class="subject-ring-prog" cx="26" cy="26" r="21"
+                stroke="#A78BFA" stroke-dasharray="131.9" stroke-dashoffset="40.9"/>
+            </svg>
+            <div class="subject-pct">69%</div>
+          </div>
+          <div class="subject-status">超前 🌟</div>
+        </div>
+        <div class="subject-card" data-s="science">
+          <div class="subject-icon">🔬</div>
+          <div class="subject-name">自然</div>
+          <div class="subject-ring">
+            <svg width="52" height="52" viewBox="0 0 52 52">
+              <circle class="subject-ring-track" cx="26" cy="26" r="21"/>
+              <circle class="subject-ring-prog" cx="26" cy="26" r="21"
+                stroke="#4CAF82" stroke-dasharray="131.9" stroke-dashoffset="26.4"/>
+            </svg>
+            <div class="subject-pct">80%</div>
+          </div>
+          <div class="subject-status">快精熟了 ⭐</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     SECTION: LEARNING MAP
+══════════════════════════ -->
+<section class="section" id="sec-map">
+  <div class="map-section">
+    <div class="map-header-row">
+      <h2>🗺️ 我的學習地圖</h2>
+      <div class="filter-pills-map">
+        <div class="pill active">全部</div>
+        <div class="pill">🔢 數學</div>
+        <div class="pill">📖 國語</div>
+        <div class="pill">🔤 英語</div>
+        <div class="pill">🔬 自然</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink-soft)">
+        <div style="width:14px;height:14px;border-radius:50%;background:#e0e0e0"></div>尚未解鎖
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink-soft)">
+        <div style="width:14px;height:14px;border-radius:50%;background:#FFB830"></div>學習中
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink-soft)">
+        <div style="width:14px;height:14px;border-radius:50%;background:#4CAF82"></div>掌握
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--ink-soft)">
+        <div style="width:14px;height:14px;border-radius:50%;background:#5BBFEF"></div>精熟 ⭐
+      </div>
+    </div>
+
+    <div class="learning-path">
+      <!-- Stage 1 -->
+      <div class="path-stage">
+        <div class="stage-header" style="background:rgba(91,191,239,0.15);color:#1a7aab">1-2 年級</div>
+        <div class="path-node expert" onclick="openNode('數的位值','92')">
+          <div class="node-status-icon" style="background:#5BBFEF">⭐</div>
+          <span class="node-emoji">🔢</span>
+          <div class="node-title">數的位值</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:92%;background:#5BBFEF"></div></div>
+        </div>
+        <div class="path-node expert" onclick="openNode('加減法','88')">
+          <div class="node-status-icon" style="background:#5BBFEF">⭐</div>
+          <span class="node-emoji">➕</span>
+          <div class="node-title">加減法</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:88%;background:#5BBFEF"></div></div>
+        </div>
+        <div class="path-node mastered" onclick="openNode('乘法九九','86')">
+          <div class="node-status-icon" style="background:#4CAF82">✓</div>
+          <span class="node-emoji">✖️</span>
+          <div class="node-title">乘法九九</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:86%;background:#4CAF82"></div></div>
+        </div>
+        <div class="path-node mastered" onclick="openNode('長度測量','80')">
+          <div class="node-status-icon" style="background:#4CAF82">✓</div>
+          <span class="node-emoji">📏</span>
+          <div class="node-title">長度測量</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:80%;background:#4CAF82"></div></div>
+        </div>
+      </div>
+
+      <!-- Stage 2 -->
+      <div class="path-stage">
+        <div class="stage-header" style="background:rgba(76,175,130,0.15);color:var(--leaf-dark)">3-4 年級</div>
+        <div class="path-node mastered" onclick="openNode('億以內數','78')">
+          <div class="node-status-icon" style="background:#4CAF82">✓</div>
+          <span class="node-emoji">💯</span>
+          <div class="node-title">億以內數</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:78%;background:#4CAF82"></div></div>
+        </div>
+        <div class="path-node developing" onclick="openNode('除法計算','55')">
+          <div class="node-status-icon" style="background:#FFB830">→</div>
+          <span class="node-emoji">➗</span>
+          <div class="node-title">除法計算</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:55%;background:#FFB830"></div></div>
+        </div>
+        <div class="path-node developing" onclick="openNode('面積周長','65')">
+          <div class="node-status-icon" style="background:#FFB830">→</div>
+          <span class="node-emoji">📐</span>
+          <div class="node-title">面積周長</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:65%;background:#FFB830"></div></div>
+        </div>
+        <div class="path-node developing" onclick="openNode('分數加減','30')">
+          <span class="node-emoji">🍕</span>
+          <div class="node-title">分數加減</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:30%;background:#FFB830"></div></div>
+        </div>
+        <div class="path-node locked">
+          <span class="node-emoji">🔒</span>
+          <div class="node-title">小數計算</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:0%;background:#ccc"></div></div>
+        </div>
+      </div>
+
+      <!-- Stage 3 -->
+      <div class="path-stage">
+        <div class="stage-header" style="background:rgba(255,184,48,0.15);color:#b37d00">5-6 年級</div>
+        <div class="path-node locked">
+          <span class="node-emoji">🔒</span>
+          <div class="node-title">整數四則</div>
+          <div class="node-bar"><div class="node-bar-fill" style="width:0%;background:#ccc"></div></div>
+        </div>
+        <div class="path-node locked">
+          <span class="node-emoji">🔒</span>
+          <div class="node-title">分數四則</div>
+          <div class="node-bar"></div>
+        </div>
+        <div class="path-node locked">
+          <span class="node-emoji">🔒</span>
+          <div class="node-title">比與比值</div>
+          <div class="node-bar"></div>
+        </div>
+      </div>
+
+      <!-- Stage 4 -->
+      <div class="path-stage">
+        <div class="stage-header" style="background:rgba(255,107,107,0.12);color:#c0392b">7-9 年級</div>
+        <div class="path-node locked">
+          <span class="node-emoji">🔒</span>
+          <div class="node-title">負數整數</div>
+          <div class="node-bar"></div>
+        </div>
+        <div class="path-node locked">
+          <span class="node-emoji">🔒</span>
+          <div class="node-title">方程式</div>
+          <div class="node-bar"></div>
+        </div>
+      </div>
+
+      <!-- Stage 5 -->
+      <div class="path-stage">
+        <div class="stage-header" style="background:rgba(167,139,250,0.12);color:#5b21b6">高中</div>
+        <div class="path-node locked">
+          <span class="node-emoji">🔒</span>
+          <div class="node-title">函數</div>
+          <div class="node-bar"></div>
+        </div>
+        <div class="path-node locked">
+          <span class="node-emoji">🔒</span>
+          <div class="node-title">微積分</div>
+          <div class="node-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Node detail popup -->
+    <div id="nodePopup" style="display:none;position:fixed;inset:0;background:rgba(45,49,66,0.5);backdrop-filter:blur(8px);z-index:200;display:none;align-items:center;justify-content:center" onclick="closeNode(event)">
+      <div style="background:#fff;border-radius:28px;padding:40px;max-width:440px;width:90%;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.2)">
+        <button onclick="document.getElementById('nodePopup').style.display='none'" style="position:absolute;top:16px;right:16px;background:rgba(45,49,66,0.1);border:none;border-radius:50%;width:32px;height:32px;cursor:pointer;font-size:16px">✕</button>
+        <div style="font-size:52px;text-align:center;margin-bottom:12px">➗</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:24px;text-align:center;color:var(--ink);margin-bottom:4px" id="popupTitle">除法計算</div>
+        <div style="text-align:center;font-size:13px;color:var(--ink-soft);margin-bottom:20px">n-II-3 · 第二學習階段</div>
+        <div style="background:rgba(255,184,48,0.1);border-radius:14px;padding:16px;margin-bottom:16px;text-align:center">
+          <div style="font-family:'Fredoka One',cursive;font-size:48px;color:#FFB830" id="popupScore">55</div>
+          <div style="font-size:13px;color:#b37d00;font-weight:700">學習中 · 再加 15 分就掌握了！</div>
+          <div style="height:8px;background:rgba(255,184,48,0.2);border-radius:100px;margin-top:12px;overflow:hidden">
+            <div id="popupBar" style="height:100%;background:linear-gradient(90deg,#FFB830,#FF8C00);border-radius:100px;transition:width 1s;width:55%"></div>
+          </div>
+        </div>
+        <div style="font-size:14px;color:var(--ink-soft);line-height:1.8;margin-bottom:20px">理解除法的意義，能做計算與估算，並能應用於日常解題。</div>
+        <div style="background:#f0faf5;border-radius:14px;padding:14px 16px;margin-bottom:20px;font-size:13px;color:var(--leaf-dark);line-height:1.7">
+          <strong>✦ 小翔說：</strong>再多練 3 題，你就可以解鎖「四則估算」節點，加油！
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center">
+          開始練習 💪
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     SECTION: SQUAD
+══════════════════════════ -->
+<section class="section" id="sec-squad">
+  <div class="squad-section">
+    <div class="squad-header">
+      <h2>👯 學習小隊「星光四人組」</h2>
+      <p>一起加油！本週目標：合計精熟 12 個節點 ⭐</p>
+    </div>
+
+    <div class="squad-grid">
+      <div class="squad-card">
+        <div class="squad-card-title">📋 本週小隊目標</div>
+        <div class="squad-week-goal">合計精熟節點 · 目前達成 8/12</div>
+        <div class="squad-progress-bar">
+          <div class="squad-progress-fill" style="width:67%"></div>
+        </div>
+        <div class="squad-progress-label">67% · 還差 4 個！週日截止 🚀</div>
+
+        <div class="squad-members">
+          <div class="member-row">
+            <div class="member-avatar" style="background:#e8f8f0">🦅</div>
+            <div class="member-info">
+              <div class="member-name">林小明（你）</div>
+              <div class="member-progress">本週貢獻 2 個節點</div>
+            </div>
+            <div class="member-contrib">+2</div>
+          </div>
+          <div class="member-row">
+            <div class="member-avatar" style="background:#fff0f0">🐲</div>
+            <div class="member-info">
+              <div class="member-name">陳小雅</div>
+              <div class="member-progress">本週貢獻 3 個節點 🌟</div>
+            </div>
+            <div class="member-contrib">+3</div>
+          </div>
+          <div class="member-row">
+            <div class="member-avatar" style="background:#fff9e6">🦄</div>
+            <div class="member-info">
+              <div class="member-name">王大宇</div>
+              <div class="member-progress">本週貢獻 2 個節點</div>
+            </div>
+            <div class="member-contrib">+2</div>
+          </div>
+          <div class="member-row">
+            <div class="member-avatar" style="background:#f0f5ff">🐢</div>
+            <div class="member-info">
+              <div class="member-name">張小安</div>
+              <div class="member-progress">本週貢獻 1 個節點</div>
+            </div>
+            <div class="member-contrib">+1</div>
+          </div>
+        </div>
+
+        <div class="challenge-card" style="margin-top:20px">
+          <div class="challenge-icon">🎁</div>
+          <div class="challenge-info">
+            <div class="challenge-title">完成目標獎勵</div>
+            <div class="challenge-desc">全隊學靈獲得限定「星光羽翼」裝飾！</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity feed -->
+      <div>
+        <div class="activity-feed">
+          <div class="feed-title">🌊 小隊動態</div>
+          <div class="feed-items">
+            <div class="feed-item">
+              <div class="feed-avatar" style="background:#e8f8f0">🦅</div>
+              <div class="feed-content">
+                <div class="feed-text"><strong>陳小雅</strong> 精熟了「乘法九九」，她的龍長出了金色鱗片！</div>
+                <div class="feed-time">3 分鐘前</div>
+              </div>
+              <div class="feed-reaction">🎉</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-avatar" style="background:#fff9e6">🦄</div>
+              <div class="feed-content">
+                <div class="feed-text"><strong>王大宇</strong> 把「除法的秘訣碎片」送給了你！查看一下吧 💌</div>
+                <div class="feed-time">1 小時前</div>
+              </div>
+              <div class="feed-reaction">💝</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-avatar" style="background:#f0f5ff">🐢</div>
+              <div class="feed-content">
+                <div class="feed-text"><strong>張小安</strong> 完成了今日三件事，連續 5 天！</div>
+                <div class="feed-time">2 小時前</div>
+              </div>
+              <div class="feed-reaction">🔥</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-avatar" style="background:#e8f8f0">🦅</div>
+              <div class="feed-content">
+                <div class="feed-text"><strong>林小明</strong> 讀完了《小王子》第三章，獲得 3 個指標加分！</div>
+                <div class="feed-time">昨天</div>
+              </div>
+              <div class="feed-reaction">📚</div>
+            </div>
+            <div class="feed-item">
+              <div class="feed-avatar" style="background:#fff0f0">🐲</div>
+              <div class="feed-content">
+                <div class="feed-text"><strong>陳小雅</strong> 挑戰了本週限定題組，分數全滿！</div>
+                <div class="feed-time">昨天</div>
+              </div>
+              <div class="feed-reaction">⭐</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="challenge-card">
+          <div class="challenge-icon">🏆</div>
+          <div class="challenge-info">
+            <div class="challenge-title">本週挑戰：知識接力賽</div>
+            <div class="challenge-desc">四個人各完成一個新節點，全隊學靈等級 +1！還差 <strong>2 個節點</strong>。</div>
+          </div>
+          <button class="challenge-btn">我來！</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════
+     SECTION: PROFILE
+══════════════════════════ -->
+<section class="section" id="sec-profile">
+  <div class="profile-section">
+
+    <div class="profile-creature-card">
+      <span class="creature-big">🦅</span>
+      <div class="profile-name">小翔</div>
+      <div class="profile-lv">LV.7 · 少年鳳凰</div>
+
+      <div class="trait-grid">
+        <div class="trait-chip">
+          <div class="trait-icon">📚</div>
+          <div class="trait-name">知識力</div>
+          <div class="trait-val">74</div>
+        </div>
+        <div class="trait-chip">
+          <div class="trait-icon">⚡</div>
+          <div class="trait-name">專注力</div>
+          <div class="trait-val">62</div>
+        </div>
+        <div class="trait-chip">
+          <div class="trait-icon">🤝</div>
+          <div class="trait-name">友情力</div>
+          <div class="trait-val">88</div>
+        </div>
+        <div class="trait-chip">
+          <div class="trait-icon">📖</div>
+          <div class="trait-name">閱讀力</div>
+          <div class="trait-val">55</div>
+        </div>
+      </div>
+
+      <div style="font-family:'Fredoka One',cursive;font-size:13px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:1px">外觀特徵</div>
+      <div style="background:#fff;border-radius:14px;padding:12px 16px;font-size:13px;color:var(--ink-soft);line-height:1.8;margin-bottom:16px;text-align:left">
+        🔵 藍色音符鱗片（英語超強）<br>
+        🟡 金色幾何紋路（數學掌握中）<br>
+        🔴 紅色火焰光環（連續 12 天）
+      </div>
+
+      <div class="evolve-hint">
+        ✨ 再 260 XP 即可進化為<br>
+        <strong>「成年鳳凰」</strong>形態！
+      </div>
+    </div>
+
+    <div class="profile-right">
+      <div style="font-family:'Fredoka One',cursive;font-size:22px;color:var(--ink);margin-bottom:18px">🏅 成就徽章</div>
+      <div class="achievements-grid">
+        <div class="achievement">
+          <div class="achievement-icon">🔥</div>
+          <div class="achievement-name">學習之火</div>
+          <div class="achievement-desc">連續 10 天</div>
+        </div>
+        <div class="achievement">
+          <div class="achievement-icon">📚</div>
+          <div class="achievement-name">書蟲</div>
+          <div class="achievement-desc">課外讀物 5 本</div>
+        </div>
+        <div class="achievement">
+          <div class="achievement-icon">⭐</div>
+          <div class="achievement-name">數學之星</div>
+          <div class="achievement-desc">精熟 5 個數學節點</div>
+        </div>
+        <div class="achievement">
+          <div class="achievement-icon">🤝</div>
+          <div class="achievement-name">好夥伴</div>
+          <div class="achievement-desc">幫助隊友 3 次</div>
+        </div>
+        <div class="achievement locked">
+          <div class="achievement-icon">🌕</div>
+          <div class="achievement-name">月亮獵人</div>
+          <div class="achievement-desc">連續 30 天</div>
+        </div>
+        <div class="achievement locked">
+          <div class="achievement-icon">🏆</div>
+          <div class="achievement-name">全科均衡</div>
+          <div class="achievement-desc">四科都達 70%</div>
+        </div>
+        <div class="achievement locked">
+          <div class="achievement-icon">📖</div>
+          <div class="achievement-name">閱讀達人</div>
+          <div class="achievement-desc">課外讀物 20 本</div>
+        </div>
+        <div class="achievement locked">
+          <div class="achievement-icon">🌟</div>
+          <div class="achievement-name">頂尖學者</div>
+          <div class="achievement-desc">精熟 30 個節點</div>
+        </div>
+      </div>
+
+      <div class="monthly-story">
+        <div class="story-title">📜 本月學習故事</div>
+        <div class="story-text">
+          這個月，小翔長出了<strong>金色音符鱗片</strong>，因為小明讀了 <em>3 本</em>課外讀物，還解鎖了 <em>8 個</em>能力節點。<br><br>
+          他最喜歡在<strong>下午 4 點</strong>學習，最擅長的科目是<strong>英語</strong>（領先同齡 6 個月！），幫助了隊友 <em>3 次</em>，連續學習了 <em>12 天</em>不間斷。<br><br>
+          下個月的目標：讓小翔進化為<strong>「成年鳳凰」</strong>！🦅✨
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Section switching
+function showSection(id, navEl) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  if (navEl) navEl.classList.add('active');
+}
+
+// Creature selection
+function selectCreature(el) {
+  document.querySelectorAll('.creature-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// Toggle task
+function toggleTask(el) {
+  el.classList.toggle('done');
+  if (el.classList.contains('done')) {
+    el.querySelector('.task-check').textContent = '✓';
+  } else {
+    el.querySelector('.task-check').textContent = '';
+  }
+}
+
+// Node popup
+function openNode(title, score) {
+  const popup = document.getElementById('nodePopup');
+  document.getElementById('popupTitle').textContent = title;
+  document.getElementById('popupScore').textContent = score;
+  document.getElementById('popupBar').style.width = score + '%';
+  popup.style.display = 'flex';
+}
+function closeNode(e) {
+  if (e.target.id === 'nodePopup') {
+    e.target.style.display = 'none';
+  }
+}
+
+// Filter pills on map
+document.querySelectorAll('.filter-pills-map .pill').forEach(p => {
+  p.addEventListener('click', () => {
+    document.querySelectorAll('.filter-pills-map .pill').forEach(x => x.classList.remove('active'));
+    p.classList.add('active');
+  });
+});
+
+// Feed reactions
+document.querySelectorAll('.feed-reaction').forEach(r => {
+  r.addEventListener('click', () => {
+    r.style.transform = 'scale(1.5)';
+    setTimeout(() => r.style.transform = 'scale(1)', 300);
+  });
+});
+</script>
+</body>
+</html>
